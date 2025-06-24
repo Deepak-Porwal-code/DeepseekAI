@@ -15,22 +15,19 @@ const app = express();
 const port = process.env.PORT || 5000;
 const MONGO_DB = process.env.MONGO_DB;
 
-// Middlewares
-app.use(express.json());
-app.use(cookieParser());
+// Allowed origins for CORS
 const allowedOrigins = [
-  "http://localhost:5173",                    // local dev
-  "https://deepseekai-frontend.onrender.com" // production frontend
+  "http://localhost:5173",                    // for local development
+  "https://deepseekai-frontend.onrender.com"  // deployed frontend
 ];
 
+// CORS Middleware
 app.use(cors({
-  origin: function(origin, callback) {
-    // Allow requests with no origin like Postman or curl
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error("CORS policy: Origin not allowed"));
+      callback(new Error("CORS policy: Origin not allowed - " + origin));
     }
   },
   credentials: true,
@@ -38,21 +35,26 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
 
-// MongoDB Connection
-mongoose
-  .connect(MONGO_DB, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("✅ Connected to MongoDB"))
-  .catch((error) => console.error("❌ MongoDB connection error:", error));
+// Middleware
+app.use(express.json());
+app.use(cookieParser());
 
-// Test route
-app.get("/", (req, res) => {
-  res.send("DeepseekAI Backend is Live 🚀");
+// MongoDB Connection
+mongoose.connect(MONGO_DB, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(() => {
+  console.log("✅ Connected to MongoDB");
+}).catch((error) => {
+  console.error("❌ MongoDB connection error:", error);
 });
 
-// Routes
+// Root Test Route
+app.get("/", (req, res) => {
+  res.send("🌐 DeepseekAI Backend is Live");
+});
+
+// API Routes
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/deepseakai", promptRoute);
 
