@@ -1,4 +1,4 @@
-import config from "../config.js"; // 🔁 Make sure to include `.js` extension
+import config from "../config.js";
 import { User } from "../model/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
