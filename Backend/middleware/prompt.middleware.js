@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import config from "../config.js";
+import config from "../config";
 
 function userMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;
