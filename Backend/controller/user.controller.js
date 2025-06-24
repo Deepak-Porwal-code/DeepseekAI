@@ -1,4 +1,4 @@
-import config from "../config.js";
+import config from "../config";
 import { User } from "../model/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
